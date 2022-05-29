@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Bootstrap Imports -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <title>Login</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <!-- Login Body -->
+            <style>
+                .divider:after,
+                .divider:before {
+                    content: "";
+                    flex: 1;
+                    height: 1px;
+                    background: #eee;
+                }
+
+                .h-custom {
+                    height: calc(100% - 73px);
+                }
+
+                @media (max-width: 450px) {
+                    .h-custom {
+                        height: 100%;
+                    }
+                }
+            </style>
+
+            <section class="vh-100">
+                <div class="container-fluid h-custom">
+                    <div class="row d-flex justify-content-center align-items-center h-100">
+                        <!-- Default Span -->
+                        <div class="alert" id = "alert_box" style = "display: none">
+                            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+                            This is an alert box.
+                          </div>
+                        <div class="col-md-9 col-lg-6 col-xl-5 camera-tab-toggle">
+                            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/draw2.webp"
+                                class="img-fluid" alt="Sample image">
+                        </div>
+                        <!-- Camera View Section -->
+                        <div class="col-md-9 col-lg-6 col-xl-5 camera-tab-toggle" style="display: none;">
+
+
+                            <!--  -->
+
+
+                           <div style="margin: 15px;">
+                            <div class="image-thumbnail">
+                                <video id="video" height="450" width="450" autoplay></video>
+                            </div>
+                            <div class="image-thumbnail" style="display: none;">
+                                <canvas id="canvas" width="500" height="500"></canvas>
+                            </div>
+
+                           </div>
+
+                            <!--  -->
+
+
+                        </div>
+
+                        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
+                            <form>
+                                
+                                <div class="divider d-flex align-items-center my-4">
+                                    <p class="text-center fw-bold mx-3 mb-0">User Login</p>
+                                </div>
+
+                                <!-- User name -->
+                                <div class="form-outline mb-4">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text" id="inputGroup-sizing-default">User Name</span>
+                                        <input id="user_name_input" type="text" class="form-control"
+                                            aria-label="Sizing example input"
+                                            aria-describedby="inputGroup-sizing-default">
+                                    </div>
+                                </div>
+
+
+                                <span class="m-1"></span>
+
+                                <button  id="click-photo" type="button" class="btn btn-primary">Login</button>
+                                </div>
+                                <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/userRegister"
+                                    class="link-danger">Register</a></p>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div
+                    class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
+                    <!-- Copyright -->
+                    <div class="text-white mb-3 mb-md-0">
+                        Copyright © 2020. All rights reserved.
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+
+
+    <!-- Bootstrap Javascript -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
+        crossorigin="anonymous"></script>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+
+        //setup before functions
+        var typingTimer;                //timer identifier
+        var doneTypingInterval = 1000;  //time in ms, 5 seconds for example
+        var $input = $('#user_name_input');
+        let video = document.querySelector("#video");
+        let click_button = document.querySelector("#click-photo");
+        let canvas = document.querySelector("#canvas");
+        let alert = document.querySelector("#alert_box")
+        var stream;
+        var image_data_url
+        //on keyup, start the countdown
+        $input.on('keyup', function () {
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(verifyUserName, doneTypingInterval);
+        });
+
+        // async function raiseAlert(){
+        //         $('#alert_box').toggle().in
+
+        // }
+
+        function raiseAlert(message) {
+            window.alert(message)
+        }
+
+        //on keydown, clear the countdown 
+        $input.on('keydown', function () {
+            if(stream!=undefined){
+                stopCamera()
+                $(`.camera-tab-toggle`).toggle()
+
+            }
+            clearTimeout(typingTimer);
+        });
+
+        //user is "finished typing," do something
+        function verifyUserName() {
+            //do something
+            console.log($input.val())
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'verify_username' %}",
+                data: {
+                    "user_name": $input.val(),
+                },
+                success: function (data) {
+                    console.log(data, typeof data)
+                    if (data['isValid']) {
+                        console.log("Open Camera")
+                        $(`.camera-tab-toggle`).toggle()
+                        startCamera()
+                    }
+                    else{
+                        raiseAlert("User Doesn't Exist")
+                    }
+                }
+            })
+        }
+
+
+
+
+
+        
+        async function startCamera() {
+            stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+            video.srcObject = stream;
+        }
+
+        async function stopCamera(){
+            stream.getTracks().forEach(function(track) {
+                track.stop();
+            });
+            stream = undefined
+        }
+
+        click_button.addEventListener('click', function () {
+            $(".image-thumbnail").toggle() // shows the captured Image
+            canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+            image_data_url = canvas.toDataURL('image/jpeg');
+            // data url of the image
+            console.log(image_data_url);
+            stopCamera()
+
+            $.ajax({
+                type: 'POST',
+                url: "{% url 'face_sign_in' %}",
+                data: {
+                    "username":$input.val(),
+                    "image_data_base64": image_data_url,
+                },
+                success: function (data) {
+                    console.log(data, typeof data)
+
+                    // raiseAlert(data["data"])
+                    location.href = 'welcome';
+                    /* 
+                    Send Login
+                    if Valid
+                        - redict Page
+                    else 
+                        - Open Camera again
+                    */
+                }
+            })
+
+        });
+    </script>
+</body>
+
+</html>

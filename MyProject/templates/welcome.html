@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Keep secret</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Redressed&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    
+    <style>
+        .container-fluid {
+            /* Center the content */
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+
+            /* Take full size */
+            height: 100vh;
+            width: 100%;
+            position: relative;
+            /* Background */
+            /* background: #eee; */
+            background-color: aqua;
+            background-image: linear-gradient(45deg, rgb(20, 222, 124) 0%, rgb(20, 222, 124) 21%,rgb(25, 190, 119) 21%, rgb(25, 190, 119) 37%,rgb(30, 158, 113) 37%, rgb(30, 158, 113) 46%,rgb(35, 126, 108) 46%, rgb(35, 126, 108) 53%,rgb(39, 94, 103) 53%, rgb(39, 94, 103) 59%,rgb(44, 62, 97) 59%, rgb(44, 62, 97) 77%,rgb(49, 30, 92) 77%, rgb(49, 30, 92) 100%);
+            opacity: 0.1;
+         }
+         .main{
+
+             top:30%;
+             left: 15%;
+             right: 15%;
+             position: absolute;
+         }
+         h1{
+             font-size: 2.2rem;
+             color: black;
+             text-transform: uppercase;
+         }
+         form{
+             text-align: center;
+             padding-bottom: 10px;
+             display: flex;
+             justify-content: center;
+         }
+         .secret-container{
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            margin-top:40px;
+        }
+        .secret-list{
+            min-width:100%;
+            list-style:none;
+        }
+         .secret {
+            margin:0.5rem;
+            background:white;
+            color:black;
+            font-size: 1.5rem;
+            display:flex;
+            justify-content: space-between;
+            align-items: center;
+            transition:all 0.3s ease;
+        }
+        .secret li{
+            flex:1;
+        }
+        .secret-input{
+            width:530px;
+            height:35px;
+            animation:move 2s ease;
+            margin: 0 50px 0 0 ;
+        }
+        .secret-item{
+            padding:0rem 0.5rem;
+            background-color: aliceblue;
+        }
+        .trash-btn{
+            background:rgb(70, 4, 250);
+            color:white;
+            border:none;
+            padding:1rem;
+            cursor:pointer;
+            font-size:1rem;
+        }
+        .fail{
+            opacity:0;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="container-fluid">
+    </div>
+    <div class="main">
+
+        <h1>Keep Your Struggle a secret until you succeed.</h1>
+        <form>
+            <textarea type="text" class="secret-input" name="secret" cols="30" rows="1" placeholder="Add Your Secret"></textarea>
+             <button type="button" class="btn btn btn-primary secret-button">Add</button>
+        </form>
+        <div class="secret-container">
+            <ul class="secret-list"></ul>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2" crossorigin="anonymous"></script>
+    <!-- jquery cdn -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <script>
+        const secretInput = document.querySelector(".secret-input");
+        const secretList = document.querySelector(".secret-list");
+        const secretButton = document.querySelector(".secret-button");
+
+        // Listener
+        document.addEventListener("DOMContentLoaded",getSecrets);
+        secretButton.addEventListener("click",addSecret);
+        secretList.addEventListener("click",deleteCheck);
+
+        function addSecret(event){
+            event.preventDefault();
+            const secretDiv = document.createElement("div");
+            secretDiv.classList.add("secret");
+            const newSecret = document.createElement("li");
+            newSecret.innerText = secretInput.value;
+            newSecret.classList.add("secret-item");
+
+            secretDiv.appendChild(newSecret);
+            saveLocalSecret(secretInput.value);
+            
+            // delete the secret(trash it)
+            const trashButton = document.createElement("button");
+            trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+            trashButton.classList.add('trash-btn');
+            secretDiv.appendChild(trashButton);
+            secretList.appendChild(secretDiv);  
+            secretInput.value = " ";
+        }
+
+        function deleteCheck(e) {
+            const item = e.target;
+            if(item.classList[0]==="trash-btn")
+            {
+                console.log("removed");
+                const secret = item.parentElement;
+                console.log(secret);
+                secret.classList.add("fail");
+                console.log(secret);
+                removeLocalSecret(secret);
+                secret.addEventListener("transitionend",function() {
+                    secret.remove();
+                })
+            }
+        }
+
+
+
+        function removeLocalSecret(secret){
+            let secrets;
+            if(localStorage.getItem("secrets")===null){
+                secrets=[];
+            }
+            else{
+
+                secrets = JSON.parse(localStorage.getItem("secrets"));
+                
+            }
+            const secretIndex = secret.children[0].innerText;
+            console.log(secretIndex);
+            secrets.splice(secrets.indexOf(secretIndex),1);
+            console.log("after deleting " + secrets);
+            localStorage.setItem("secrets",JSON.stringify(secrets));
+        }
+
+
+
+        // Save the secrets on your local storage
+        function saveLocalSecret(secret){
+            let secrets;
+            if(localStorage.getItem("secrets")==null){
+                secrets=[];
+                console.log("first");
+            }else{
+                secrets = JSON.parse(localStorage.getItem("secrets"));
+            }
+            secrets.push(secret);
+            localStorage.setItem("secrets",JSON.stringify(secrets));  
+            
+            secrets = JSON.parse(localStorage.getItem("secrets"));
+            console.log(secrets);
+        }
+        // Save it
+
+        function getSecrets() {
+            let secrets;
+            if(localStorage.getItem("secrets")===null) {
+                secrets=[];
+            }else{
+                console.log("get");
+                secrets = JSON.parse(localStorage.getItem("secrets"));
+            }
+            secrets.forEach(function(secret){
+                console.log("5");
+                const secretDiv = document.createElement("div");
+                secretDiv.classList.add("secret");
+
+                const newSecret = document.createElement("li");
+                newSecret.innerText = secret;
+                newSecret.classList.add("secret-item");
+                secretDiv.appendChild(newSecret);
+                const trashButton = document.createElement("button");
+                trashButton.innerHTML = '<i class="fas fa-trash"></i>';
+                trashButton.classList.add('trash-btn');
+                secretDiv.appendChild(trashButton);
+                secretList.appendChild(secretDiv);
+            })
+        }
+
+
+    </script>
+  </body>
+</html>
