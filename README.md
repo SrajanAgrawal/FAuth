@@ -55,8 +55,11 @@
 
 <a id="flow"></a>
 ## 💫Step By Step Flow
-### image1
-### image2
+### ![FAuthGit1](https://user-images.githubusercontent.com/91273821/170918564-1fee3ae3-545a-4ff0-9a53-6afb0ff46229.PNG) <br>
+### ![FAuthGit2](https://user-images.githubusercontent.com/91273821/170918569-f4b61fad-7fbd-489a-9095-4b3e792143cc.PNG) <br>
+### ![FAuthGit3](https://user-images.githubusercontent.com/91273821/170918579-216aa9c5-161c-4524-b8f6-e939b1669adf.PNG) <br>
+### ![FAuthGit4](https://user-images.githubusercontent.com/91273821/170918584-7bf860e0-12ad-4a50-b10d-3538c206f5b7.PNG) <br>
+
 
 
 <a id="challenges"></a>
