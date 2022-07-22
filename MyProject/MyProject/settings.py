@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-lq)6-x8mv4k+$@0s4#_pbs#&j%m7@m#edzzqx1eepd5=596elu'
+SECRET_KEY = '#Enter Your Secret Key Here'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -114,8 +114,8 @@ USE_I18N = True
 USE_TZ = True
 
 OPEN_FACE_CREDENTIAL = {
-    "api_key": "C45es-1L9UyhtKj3kR4ALiAEyZ9D2wMs",
-    "api_secret": "8AY6jU4T4Yx8CM_NMG1-KzScvRiWL5-O"
+    "api_key": "Enter API Key",
+    "api_secret": "Enter API Secret"
 }
 
 
